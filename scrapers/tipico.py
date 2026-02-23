@@ -110,17 +110,28 @@ class TipicoScraper(BaseBookmakerScraper):
         logger.info(f"[{self.name}] Total unique matches: {len(unique_urls)}")
         return unique_urls[:15]  # Limit to 15 matches
     
-    def parse_odds(self, page, match_data: dict) -> Optional[OddsData]:
+    async def parse_match(self, match_data: dict) -> Optional[OddsData]:
         """
         Parse odds from a Tipico match page
-        Uses the selectors from your Google Sheet investigation
+        Fetches the page first, then extracts data
         """
         url = match_data['url']
         league = match_data.get('league', 'Unknown')
         
         try:
+            # Fetch the match page
+            logger.info(f"[{self.name}] Fetching match: {url}")
+            page = await asyncio.to_thread(
+                StealthyFetcher.fetch,
+                url,
+                network_idle=True
+            )
+            
+            if not page:
+                logger.warning(f"[{self.name}] Failed to fetch page: {url}")
+                return None
+            
             # Extract team names from aria-label or page content
-            # First try: Get from the page title or headers
             team_names = self._extract_team_names(page)
             
             if not team_names:
@@ -249,14 +260,12 @@ class TipicoScraper(BaseBookmakerScraper):
             
             # Scrape each match
             for match_data in matches_data:
-                odds = self.parse_odds(page=None, match_data=match_data)
+                odds = await self.parse_match(match_data)
                 
                 if odds:
                     results.append(odds)
                 
                 # Be nice - add delay between requests
-                import asyncio
-                import random
                 await asyncio.sleep(random.uniform(3, 6))
             
             logger.info(f"[{self.name}] Successfully scraped {len(results)}/{len(matches_data)} matches")
