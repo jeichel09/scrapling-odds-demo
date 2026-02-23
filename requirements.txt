@@ -1,0 +1,39 @@
+# Scrapling Odds Demo - Requirements
+
+# Core scraping framework
+scrapling>=0.5.0
+
+# Async support
+asyncio>=3.4.3
+aiohttp>=3.9.0
+
+# Data handling
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Database
+sqlite3  # Built-in with Python
+
+# Environment variables
+python-dotenv>=1.0.0
+
+# Logging
+rich>=13.0.0  # Better console output
+
+# Testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+
+# Type hints
+typing-extensions>=4.8.0
+
+# Date/time
+python-dateutil>=2.8.2
+
+# HTTP utilities
+requests>=2.31.0
+httpx>=0.25.0
+
+# Optional: For advanced features
+# redis>=5.0.0  # For caching
+# schedule>=1.2.0  # For scheduling
