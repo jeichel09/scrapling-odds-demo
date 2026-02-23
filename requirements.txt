@@ -3,16 +3,12 @@
 # Core scraping framework
 scrapling>=0.4.0
 
-# Async support
-asyncio>=3.4.3
+# Async HTTP client
 aiohttp>=3.9.0
 
 # Data handling
 pandas>=2.0.0
 numpy>=1.24.0
-
-# Database
-sqlite3  # Built-in with Python
 
 # Environment variables
 python-dotenv>=1.0.0
@@ -34,6 +30,4 @@ python-dateutil>=2.8.2
 requests>=2.31.0
 httpx>=0.25.0
 
-# Optional: For advanced features
-# redis>=5.0.0  # For caching
-# schedule>=1.2.0  # For scheduling
+# Note: sqlite3 and asyncio are built-in Python modules, no need to install
