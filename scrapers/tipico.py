@@ -3,6 +3,7 @@ Tipico Scraper
 Scrapes odds from Tipico (Austria/Germany) using actual site selectors
 """
 
+import asyncio
 from typing import List, Optional
 from scrapling.fetchers import StealthyFetcher
 from scrapers.base import BaseBookmakerScraper
@@ -45,9 +46,10 @@ class TipicoScraper(BaseBookmakerScraper):
                 league_url = f"{self.base_url}{league_path}"
                 logger.info(f"[{self.name}] Scraping {league_name}: {league_url}")
                 
-                # Fetch league page - use sync fetcher in async context
-                # Scrapling's StealthyFetcher is synchronous
-                page = StealthyFetcher.fetch(
+                # Fetch league page - run sync fetcher in separate thread
+                # This avoids "Sync API inside asyncio loop" error
+                page = await asyncio.to_thread(
+                    StealthyFetcher.fetch,
                     league_url,
                     solve_cloudflare=True,
                     network_idle=True

@@ -3,6 +3,7 @@ Rabona Scraper
 Scrapes odds from Rabona (Crypto sportsbook)
 """
 
+import asyncio
 from typing import List
 from scrapling.fetchers import StealthyFetcher
 from scrapers.base import BaseBookmakerScraper
@@ -36,7 +37,8 @@ class RabonaScraper(BaseBookmakerScraper):
             
             logger.info(f"[{self.name}] Fetching main page: {main_url}")
             
-            page = StealthyFetcher.fetch(
+            page = await asyncio.to_thread(
+                StealthyFetcher.fetch,
                 main_url,
                 solve_cloudflare=True,
                 network_idle=True
