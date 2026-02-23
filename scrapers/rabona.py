@@ -4,7 +4,7 @@ Scrapes odds from Rabona (Crypto sportsbook)
 """
 
 from typing import List
-from scrapling.fetchers import StealthyFetcher
+from scrapling.fetchers import AsyncStealthyFetcher
 from scrapers.base import BaseBookmakerScraper
 from models.odds import OddsData
 from datetime import datetime
@@ -36,7 +36,8 @@ class RabonaScraper(BaseBookmakerScraper):
             
             logger.info(f"[{self.name}] Fetching main page: {main_url}")
             
-            page = await StealthyFetcher.fetch(
+            fetcher = AsyncStealthyFetcher()
+            page = await fetcher.fetch(
                 main_url,
                 solve_cloudflare=True,
                 network_idle=True

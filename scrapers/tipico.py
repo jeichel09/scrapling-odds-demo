@@ -4,7 +4,7 @@ Scrapes odds from Tipico (Austria/Germany) using actual site selectors
 """
 
 from typing import List, Optional
-from scrapling.fetchers import StealthyFetcher
+from scrapling.fetchers import AsyncStealthyFetcher
 from scrapers.base import BaseBookmakerScraper
 from models.odds import OddsData
 from datetime import datetime
@@ -45,8 +45,9 @@ class TipicoScraper(BaseBookmakerScraper):
                 league_url = f"{self.base_url}{league_path}"
                 logger.info(f"[{self.name}] Scraping {league_name}: {league_url}")
                 
-                # Fetch league page
-                page = await StealthyFetcher.fetch(
+                # Fetch league page using async API
+                fetcher = AsyncStealthyFetcher()
+                page = await fetcher.fetch(
                     league_url,
                     solve_cloudflare=True,
                     network_idle=True
