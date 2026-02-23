@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scrapling Odds Comparison | Compare Bookmaker Odds</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-chart-line"></i>
+                    <span>ScraplingOdds</span>
+                </div>
+                <nav class="main-nav">
+                    <a href="#" class="active">Football</a>
+                    <a href="#">Basketball</a>
+                    <a href="#">Tennis</a>
+                    <a href="#">Ice Hockey</a>
+                </nav>
+                <div class="header-actions">
+                    <button class="btn-refresh" onclick="refreshOdds()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sub Navigation -->
+    <nav class="sub-nav">
+        <div class="container">
+            <div class="sub-nav-content">
+                <div class="sport-icon">
+                    <i class="fas fa-futbol"></i>
+                    <span>Football</span>
+                </div>
+                <div class="league-filters">
+                    <button class="league-btn active" data-league="all">All Leagues</button>
+                    <button class="league-btn" data-league="bundesliga">Bundesliga</button>
+                    <button class="league-btn" data-league="premier">Premier League</button>
+                    <button class="league-btn" data-league="laliga">La Liga</button>
+                    <button class="league-btn" data-league="seriea">Serie A</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Search and Filters -->
+            <div class="search-section">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search matches, teams...">
+                </div>
+                <div class="filter-options">
+                    <select id="bookmakerFilter">
+                        <option value="all">All Bookmakers</option>
+                        <option value="tipico">Tipico</option>
+                        <option value="rabona">Rabona</option>
+                    </select>
+                    <select id="sortBy">
+                        <option value="time">Kickoff Time</option>
+                        <option value="best-odds">Best Odds</option>
+                        <option value="popularity">Popularity</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Odds Table Header -->
+            <div class="odds-table-header">
+                <div class="match-info-header">Match</div>
+                <div class="odds-header">
+                    <div class="outcome-header">1</div>
+                    <div class="outcome-header">X</div>
+                    <div class="outcome-header">2</div>
+                </div>
+            </div>
+
+            <!-- Matches Container -->
+            <div id="matchesContainer" class="matches-container">
+                <!-- Matches will be loaded here dynamically -->
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Loading odds...</p>
+                </div>
+            </div>
+
+            <!-- No Results -->
+            <div id="noResults" class="no-results" style="display: none;">
+                <i class="fas fa-search"></i>
+                <p>No matches found</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Match Detail Modal -->
+    <div id="matchModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalMatchTitle">Match Details</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="modalOddsDetails" class="modal-odds-details">
+                    <!-- Detailed odds comparison -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>About</h4>
+                    <p>Scrapling Odds Comparison - Compare bookmaker odds in real-time.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Bookmakers</h4>
+                    <ul>
+                        <li>Tipico</li>
+                        <li>Rabona</li>
+                        <li>More coming soon...</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Sports</h4>
+                    <ul>
+                        <li>Football</li>
+                        <li>Basketball</li>
+                        <li>Tennis</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Scrapling Odds Demo. For educational purposes only.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
