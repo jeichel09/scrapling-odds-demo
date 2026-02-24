@@ -133,6 +133,7 @@ class BaseBookmakerScraper(ABC):
         
         Supports:
         - Decimal: "2.50" -> 2.50
+        - European: "2,60" -> 2.60 (comma as decimal separator)
         - Fractional: "5/2" -> 3.50
         - American: "+150" -> 2.50, "-200" -> 1.50
         """
@@ -140,6 +141,10 @@ class BaseBookmakerScraper(ABC):
             return 0.0
         
         odds_text = str(odds_text).strip()
+        
+        # Handle European format (comma as decimal separator)
+        # e.g., "2,60" -> "2.60"
+        odds_text = odds_text.replace(',', '.')
         
         try:
             # Fractional format (e.g., "5/2")

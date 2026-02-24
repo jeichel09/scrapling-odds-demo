@@ -4,6 +4,7 @@ Scrapes odds from Tipico (Austria/Germany) using actual site selectors
 """
 
 import asyncio
+import random
 from typing import List, Optional
 from scrapling.fetchers import StealthyFetcher
 from scrapers.base import BaseBookmakerScraper
@@ -275,7 +276,7 @@ class TipicoScraper(BaseBookmakerScraper):
         if not value:
             return False
         try:
-            # Clean the value
+            # Clean the value - handle European format (comma)
             cleaned = value.strip().replace(',', '.')
             val = float(cleaned)
             # Valid odds are typically between 1.01 and 500
