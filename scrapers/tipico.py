@@ -110,25 +110,64 @@ class TipicoScraper(BaseBookmakerScraper):
         logger.info(f"[{self.name}] Total unique matches: {len(unique_urls)}")
         return unique_urls[:15]  # Limit to 15 matches
     
-    async def parse_match(self, match_data: dict) -> Optional[OddsData]:
+    async def scrape_match(self, url: str) -> Optional[OddsData]:
+        """
+        Override scrape_match to use StealthyFetcher with asyncio.to_thread
+        """
+        max_retries = 3
+        
+        for attempt in range(max_retries):
+            try:
+                logger.info(f"[{self.name}] Scraping: {url} (attempt {attempt + 1})")
+                
+                # Fetch page using StealthyFetcher in thread
+                page = await asyncio.to_thread(
+                    StealthyFetcher.fetch,
+                    url,
+                    network_idle=True
+                )
+                
+                if not page:
+                    logger.warning(f"[{self.name}] Failed to fetch page: {url}")
+                    return None
+                
+                # Parse odds
+                odds = self.parse_odds(page, url)
+                
+                if odds:
+                    logger.info(f"[{self.name}] Successfully scraped: {odds.match_name}")
+                    return odds
+                else:
+                    logger.warning(f"[{self.name}] Failed to parse odds from {url}")
+                    return None
+                    
+            except Exception as e:
+                logger.error(f"[{self.name}] Error scraping {url}: {e}")
+                
+                if attempt < max_retries - 1:
+                    wait_time = (attempt + 1) * 5
+                    logger.info(f"[{self.name}] Retrying in {wait_time}s...")
+                    await asyncio.sleep(wait_time)
+                else:
+                    logger.error(f"[{self.name}] Max retries exceeded for {url}")
+                    return None
+        
+        return None
+    
+    def parse_odds(self, page, url: str) -> Optional[OddsData]:
         """
         Parse odds from a Tipico match page
-        Fetches the page first, then extracts data
         """
-        url = match_data['url']
-        league = match_data.get('league', 'Unknown')
+        # Extract league from URL
+        league = "Unknown"
+        if 'bundesliga' in url.lower():
+            league = "Austrian Bundesliga"
+        elif '2-liga' in url.lower():
+            league = "Austrian 2. Liga"
         
         try:
-            # Fetch the match page
-            logger.info(f"[{self.name}] Fetching match: {url}")
-            page = await asyncio.to_thread(
-                StealthyFetcher.fetch,
-                url,
-                network_idle=True
-            )
-            
             if not page:
-                logger.warning(f"[{self.name}] Failed to fetch page: {url}")
+                logger.warning(f"[{self.name}] No page provided for {url}")
                 return None
             
             # Extract team names from aria-label or page content
@@ -260,7 +299,7 @@ class TipicoScraper(BaseBookmakerScraper):
             
             # Scrape each match
             for match_data in matches_data:
-                odds = await self.parse_match(match_data)
+                odds = await self.scrape_match(match_data['url'])
                 
                 if odds:
                     results.append(odds)
